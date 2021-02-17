@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\PinRepository;
+use App\Entity\Pin;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
