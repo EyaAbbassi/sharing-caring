@@ -7,8 +7,5 @@ new Article
 
 {% block body %}
     <h1> Upload an article to donate </h1>
-    {{form_start(form)}}
-            {{form_widget(form)}}
-            <input type="submit" value="create Article" formnovalidate>
-    {{form_end(form)}}
+    {{include('pins/_form.html.twig', {'submitButtonText':'Create Article'})}}
 {% endblock %}			
