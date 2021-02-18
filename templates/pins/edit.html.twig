@@ -4,6 +4,12 @@
 
 
 {% block body %}
-    <h1> Edit {{pin.title}} </h1>
-   {{include('pins/_form.html.twig', {'submitButtonText':'Update Article'}) }}
+    <div class ="row">
+        <div class="col-md-6 mx-auto">
+    
+             <h1> Edit {{pin.title}} </h1>
+             {{include('pins/_form.html.twig', {'submitButtonText':'Update Article'}) }}
+        </div>
+    </div>
+   
 {% endblock %}			

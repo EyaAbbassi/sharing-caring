@@ -6,6 +6,11 @@ new Article
 {% endblock %}
 
 {% block body %}
-    <h1> Upload an article to donate </h1>
-    {{include('pins/_form.html.twig', {'submitButtonText':'Create Article'})}}
+    <div class ="row">
+        <div class="col-md-6 mx-auto">
+    
+            <h1> Upload an article to donate </h1>
+            {{include('pins/_form.html.twig', {'submitButtonText':'Create Article'})}}
+        </div>
+    </div>
 {% endblock %}			
