@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title 'Edit Article*' ~ pin.id %}
+{% block title 'Edit*' ~ pin.title %}
 
 
 {% block body %}
-    <h1> Edit the article {{pin.id}} </h1>
+    <h1> Edit {{pin.title}} </h1>
     {{form_start(form)}}
             {{form_widget(form)}}
             <input type="submit" value="Update Article" formnovalidate>
