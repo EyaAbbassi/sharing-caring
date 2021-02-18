@@ -29,7 +29,7 @@ trait Timestampable
     }
     public function setUpdateddAt(\DateTimeInterface $updatedAt): self
     {
-        $this->updatedAt = $updateddAt;
+        $this->updatedAt = $updatedAt;
         return $this;
     }
     /**
