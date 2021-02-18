@@ -43,6 +43,8 @@ class PinsController extends AbstractController
                     $data=$form->getData();
                     $em->persist($pin);
                     $em->flush();
+
+                    $this-> addFlash ('success','Article successfully created');
                     return $this->redirectToRoute("app_home");
               }
         return $this-> render('pins/create.html.twig',['form'=>$form->createView()]);
@@ -72,6 +74,8 @@ class PinsController extends AbstractController
           {    
                 $data=$form->getData();
                 $em->flush();
+                $this-> addFlash ('success','Article successfully updated');
+
                 return $this->redirectToRoute("app_home");
           }
       return $this->render('pins/edit.html.twig',[
@@ -88,7 +92,8 @@ class PinsController extends AbstractController
     
     $em->remove($pin);
     $em->flush();
-    
+    $this-> addFlash ('info','Article successfully deleted');
+
     return $this->redirectToRoute("app_home");
   }
 

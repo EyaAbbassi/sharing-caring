@@ -5,15 +5,32 @@
         <title>{% block title %}Welcome!{% endblock %}</title>
        
         {% block stylesheets %}
+           <style>
+            .alert {
+                 padding : 10px;
+                 color : white ;
+                 text-align: center;
+                }
+              .alert-success {
+                   background-color: green ;
+               }
+               .alert-error {
+                   background-color : red ;
+               }
+               .alert-info {
+                   background-color: blue ;
+               }
            
+           </style>
         {% endblock %}
+
 
         {% block javascripts %}
 
         {% endblock %}
     </head>
     <body>
-        <nav>
+    {{include ('layouts/partials/_flash_messages.html.twig')}}
             <ul> 
                 <li><a href="{{path('app_home')}}">Home</a></li>
                 <li><a href="{{path('app_pins_create')}}">Add an article</a></li>
