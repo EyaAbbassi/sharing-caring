@@ -11,18 +11,19 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="users")
  * @ORM\HasLifecycleCallbacks
+ * @UniqueEntity(fields="email", message="There is already an account with this email")
  */
 class User implements UserInterface
 {
     use Timestampable;
+
     /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
     private $id;
@@ -56,6 +57,17 @@ class User implements UserInterface
      * @ORM\Column(type="string")
      */
     private $password;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Pin::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $pins;
+
+
+    public function __construct()
+    {
+        $this->pins = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -143,14 +155,11 @@ class User implements UserInterface
     }
 
     /**
-     * Returning a salt is only needed, if you are not using a modern
-     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
-     *
      * @see UserInterface
      */
-    public function getSalt(): ?string
+    public function getSalt()
     {
-        return null;
+        // not needed when using the "bcrypt" algorithm in security.yaml
     }
 
     /**
@@ -161,4 +170,37 @@ class User implements UserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
+
+    /**
+     * @return Collection|Pin[]
+     */
+    public function getPins(): Collection
+    {
+        return $this->pins;
+    }
+    
+    public function addPin(Pin $pin): self
+    {
+        if (!$this->pins->contains($pin)) {
+            $this->pins[] = $pin;
+            $pin->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePin(Pin $pin): self
+    {
+        if ($this->pins->contains($pin)) {
+            $this->pins->removeElement($pin);
+            // set the owning side to null (unless already changed)
+            if ($pin->getUser() === $this) {
+                $pin->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+   
 }

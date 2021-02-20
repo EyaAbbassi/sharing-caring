@@ -1,12 +1,14 @@
 <?php
 
 namespace App\Entity;
-use App\Entity\Traits\Timestampable;
-use App\Repository\PinRepository;
+
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert ;
+use App\Repository\PinRepository;
+use App\Entity\Traits\Timestampable;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
 /**
  * @ORM\Entity(repositoryClass=PinRepository::class)
  * @ORM\Table(name="pins")
@@ -38,6 +40,13 @@ class Pin
      * @Assert\Length(min=10)
      */
     private $description;
+
+     /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="pins")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
 
     /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
@@ -110,4 +119,17 @@ class Pin
 
         return $this;
     }
+
+     public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
 }

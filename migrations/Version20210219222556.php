@@ -14,7 +14,7 @@ final class Version20210219222556 extends AbstractMigration
 {
     public function getDescription() : string
     {
-        return 'create users table avec tamstable';
+        return 'create users table avec tampstable';
     }
 
     public function up(Schema $schema) : void
