@@ -31,23 +31,27 @@ class PinsController extends AbstractController
      * @Route("/pins/create", name="app_pins_create", methods="GET|POST")
      */
 
-    public function create(Request $request , EntityManagerInterface $em): response
+    public function create(Request $request, EntityManagerInterface $em, UserRepository $userRepo): Response
     {
-        $pin = new Pin ;
-        $form= $this->createForm(PinType ::class,$pin );
+        $pin = new Pin;
 
-             $form->handleRequest($request);
+        $form = $this->createForm(PinType::class, $pin);
 
-              if ($form->isSubmitted() && $form ->isValid())
-              {    
-                    $data=$form->getData();
-                    $em->persist($pin);
-                    $em->flush();
+        $form->handleRequest($request);
 
-                    $this-> addFlash ('success','Article successfully created');
-                    return $this->redirectToRoute("app_home");
-              }
-        return $this-> render('pins/create.html.twig',['form'=>$form->createView()]);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $pin->setUser($this->getUser());
+            $em->persist($pin);
+            $em->flush();
+
+            $this->addFlash('success', 'Pin successfully created!');
+
+            return $this->redirectToRoute('app_home');
+        }
+
+        return $this->render('pins/create.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
 
