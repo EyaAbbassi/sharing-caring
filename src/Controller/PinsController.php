@@ -2,18 +2,17 @@
 
 namespace App\Controller;
 
-use App\Repository\PinRepository;
 use App\Entity\Pin;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Form\PinType;
+use App\Repository\PinRepository;
+use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\HttpFoundation\Request;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Common\Persistence\ManagerRegistry;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\Form\FormRegistryInterface;
-use App\Form\PinType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 
 class PinsController extends AbstractController
