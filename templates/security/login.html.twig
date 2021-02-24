@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-md-6 mx-auto">
             <h1 class="mt-5 mb-3 text-center">Please sign in</h1>
-            <p class="mb-5 text-center text-muted">Your articles are waiting for you.</p>
+            <p class="mb-5 text-center text-muted">Your pins are waiting for you.</p>
 
             <form method="post">
                 {% if error %}
@@ -35,7 +35,7 @@
                         </div>
                     </div>
 
-                    <a href="#">Forgot password?</a>
+                    <a href="{{ path('app_forgot_password_request') }}">Forgot password?</a>
                 </div>
                 
                 <input type="hidden" name="csrf_token" value="{{ csrf_token('authenticate') }}">

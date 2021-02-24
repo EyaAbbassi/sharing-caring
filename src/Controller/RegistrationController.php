@@ -54,7 +54,7 @@ class RegistrationController extends AbstractController
             $em->flush();
 
             // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
                 (new TemplatedEmail)
                     ->from(new Address(
                         $this->getParameter('app.mail_from_address'),
@@ -80,7 +80,8 @@ class RegistrationController extends AbstractController
     }
 
     /**
-     * Route("/verify/email", name="app_verify_email",methods="POST")*/
+     * @Route("/verify/email", name="app_verify_email",methods="GET|POST")
+     */
     public function verifyUserEmail(Request $request): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
