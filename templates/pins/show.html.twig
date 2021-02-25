@@ -17,16 +17,15 @@
                         <small>
                             Submitted 
                             <time datetime="{{ pin.createdAt|date('Y-m-d H:i:s') }}">{{ pin.createdAt|ago }}</time>
-                              by {{ pin.user.fullName }}
+                            by {{ pin.user.fullName }}
                         </small>
                     </p>
 
                     <p class="pt-3 text-break">
                         {{ pin.description }}
-
                     </p>
- 
-                 
+
+                    {% if is_granted('PIN_MANAGE', pin) %}
                     <div class="pt-3">
                         <a href="{{ path('app_pins_edit', {'id': pin.id}) }}" class="btn btn-light">Edit</a>
                         <a href="#" onclick="event.preventDefault(); confirm('Are you sure?') && document.getElementById('js-pin-delete-form').submit();" class="btn btn-light">Delete</a>
@@ -36,7 +35,7 @@
                             <input type="hidden" name="_method" value="DELETE">
                         </form> 
                     </div>
-                    
+                    {% endif %}
                 </div>
             </article>
         </div>

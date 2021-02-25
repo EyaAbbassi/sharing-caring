@@ -41,7 +41,9 @@ class Pin
      */
     private $description;
 
-     /**
+     
+ 
+    /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="pins")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -120,6 +122,8 @@ class Pin
         return $this;
     }
 
+    
+   
      public function getUser(): ?User
     {
         return $this->user;

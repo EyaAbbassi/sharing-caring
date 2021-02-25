@@ -24,6 +24,7 @@ class PinType extends AbstractType
             ])
             ->add('title', TextType::class)
             ->add('description', TextareaType::class)
+           
         ;
     }
 

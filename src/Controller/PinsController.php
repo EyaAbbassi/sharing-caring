@@ -14,22 +14,22 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-
 class PinsController extends AbstractController
 {
-    /**
-     * @Route("/", name="app_home", methods="GET" )
-     */
-    public function index(PinRepository $pinRepository)
-    {
-        $pins= $pinRepository->findBy([],['createdAt' => 'DESC']);
-        return $this->render('pins/index.html.twig', compact('pins'));
-    }
-
 /**
-     * @Route("/pins/create", name="app_pins_create", methods="GET|POST")
-     */
+ * @Route("/", name= "app_home", methods="GET")
+ */
+public function index(PinRepository $pinRepository): Response
+{
+    $pins = $pinRepository->findBy([], ['createdAt' => 'DESC']);
 
+    return $this->render('pins/index.html.twig', compact('pins'));
+}
+    
+    /**
+     * @Route("/pins/create", name="app_pins_create", methods="GET|POST")
+     * @IsGranted("PIN_CREATE")
+     */
     public function create(Request $request, EntityManagerInterface $em, UserRepository $userRepo): Response
     {
         $pin = new Pin;
@@ -52,52 +52,56 @@ class PinsController extends AbstractController
             'form' => $form->createView()
         ]);
     }
-
-
-
-/**
- * @Route("/pins/{id<[0-9]+>}", name="app_pins_show",methods="GET" )
- */
- public function show(Pin $pin): Response
- {
-     return $this->render('pins/show.html.twig', compact ('pin'));
- }
-
- /**
-  *  @Route("/pins/{id<[0-9]+>}/edit", name="app_pins_edit",methods="GET|PUT")
-  */
-  public function edit(Request $request ,EntityManagerInterface $em,Pin $pin): response
-  { 
     
-    $form= $this->createForm(PinType ::class,$pin, ['method'=>'PUT']);
-
-         $form->handleRequest($request);
-
-          if ($form->isSubmitted() && $form ->isValid())
-          {    
-                $data=$form->getData();
-                $em->flush();
-                $this-> addFlash ('success','Article successfully updated');
-
-                return $this->redirectToRoute("app_home");
-          }
-      return $this->render('pins/edit.html.twig',[
-        'pin' =>$pin, 
-        'form'=>$form->createView()]);
-  }
-
-  /**
-  *  @Route("/pins/{id<[0-9]+>}", name="app_pins_delete",methods="DELETE")
-  */ 
-
-  public function delete(EntityManagerInterface $em,Pin $pin): response
-  { 
+    /**
+     * @Route("/pins/{id<[0-9]+>}", name= "app_pins_show", methods="GET")
+     */
+    public function show(Pin $pin): Response
+    {
+        return $this->render('pins/show.html.twig', compact('pin'));
+    }
     
-    $em->remove($pin);
-    $em->flush();
-    $this-> addFlash ('info','Article successfully deleted');
+    
+    /**
+     * @Route("/pins/{id<[0-9]+>}/edit", name="app_pins_edit", methods={"GET", "PUT"})
+     * @IsGranted("PIN_MANAGE", subject="pin")
+     */
+    public function edit(Request $request, Pin $pin, EntityManagerInterface $em): Response
+    {
+        $form = $this->createForm(PinType::class, $pin, [
+            'method' => 'PUT'
+        ]);
 
-    return $this->redirectToRoute("app_home");
-  }
+        $form->handleRequest($request);
 
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+
+            $this->addFlash('success', 'Pin successfully updated!');
+
+            return $this->redirectToRoute('app_home');
+        }
+
+        return $this->render('pins/edit.html.twig', [
+            'pin' => $pin,
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/pins/{id<[0-9]+>}", name="app_pins_delete", methods="DELETE")
+     */
+    public function delete(Request $request, Pin $pin, EntityManagerInterface $em): Response
+    {
+        $this->denyAccessUnlessGranted('PIN_MANAGE', $pin);
+
+        if ($this->isCsrfTokenValid('pin_deletion_' . $pin->getId(), $request->request->get('csrf_token'))) {
+            $em->remove($pin);
+            $em->flush();
+
+            $this->addFlash('info', 'Pin successfully deleted!');
+        }
+
+        return $this->redirectToRoute('app_home');
+    }
 }

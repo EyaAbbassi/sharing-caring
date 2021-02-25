@@ -23,11 +23,11 @@ class AccountController extends AbstractController
      */
     public function show(): Response
     {
-        return $this->render('account/show.html.twig');
+           return $this->render('account/show.html.twig');
     }
 
     /**
-     * @Route("/edit", name="app_account_edit", methods={"GET", "PATCH"})
+     * @Route("/edit", name="app_account_edit", methods="GET|PATCH")
      * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
     public function edit(Request $request, EntityManagerInterface $em): Response
