@@ -3,6 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Pin;
+use App\Entity\Contact;
+use App\Form\ContactType;
+use Symfony\Component\Mime\Address;
 use App\Form\PinType;
 use App\Repository\PinRepository;
 use App\Repository\UserRepository;
@@ -13,6 +16,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Bridge\Twig\Mime\WrappedTemplatedEmail;
 
 class PinsController extends AbstractController
 {
@@ -54,12 +60,52 @@ public function index(PinRepository $pinRepository): Response
     }
     
     /**
-     * @Route("/pins/{id<[0-9]+>}", name= "app_pins_show", methods="GET")
+     * @Route("/pins/{id<[0-9]+>}", name= "app_pins_show", methods="GET|POST")
      */
-    public function show(Pin $pin): Response
+    public function show(Pin $pin, Request $request,EntityManagerInterface $em,MailerInterface $mailer ): Response
     {
-        return $this->render('pins/show.html.twig', compact('pin'));
+        $contact = new Contact();
+     
+        $form = $this->createForm(ContactType::class, $contact);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+            
+            $email = (new TemplatedEmail())
+            ->from($contact->getEmail())
+            ->to(new Address(
+                $this->getParameter('app.mail_from_address'),
+                $this->getParameter('app.mail_from_name'),
+            ))        
+            ->subject('demande!')
+            ->htmlTemplate('notification/not.html.twig')
+            ->context([
+                'firstname' => $contact->getFirstName(),
+                'lastname' => $contact->getLastName(),
+                'mail' => $contact->getEmail(),
+                'phone' => $contact->getPhone(),
+                'message' => $contact->getMessage()
+            ])
+            ;
+
+        $mailer->send($email);
+
+            $this->addFlash('success', 'votre message a été bien envoyé!');
+            return $this->render('pins/show.html.twig', [
+                'contact'=>$contact,
+                'pin' => $pin,
+                'form' => $form->createView()]
+            );            
+        }
+
+        return $this->render('pins/show.html.twig', [
+            'pin' => $pin,
+            'form' => $form->createView()]
+        );
     }
+
     
     
     /**

@@ -10,10 +10,10 @@
       <ul class="navbar-nav ml-auto">
         {% if app.user %}
           <li class="nav-item">
-            <a class="nav-link" href="{{ path('app_pins_create') }}">New Pin</a>
+            <a class="nav-link" href="{{ path('app_pins_create') }}">Give something</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{{ path('app_account') }}">Account</a>
+            <a class="nav-link" href="{{ path('app_account') }}">Visit your account</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('js-logout-form').submit();">Logout</a>
@@ -24,7 +24,7 @@
           </form>
         {% else %}
           <li class="nav-item">
-            <a class="nav-link" href="{{ path('app_register') }}">Register</a>
+            <a class="nav-link" href="{{ path('app_register') }}">Join the givers</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{ path('app_login') }}">Login</a>
