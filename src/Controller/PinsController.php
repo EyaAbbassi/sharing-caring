@@ -86,7 +86,8 @@ public function index(PinRepository $pinRepository): Response
                 'lastname' => $contact->getLastName(),
                 'mail' => $contact->getEmail(),
                 'phone' => $contact->getPhone(),
-                'message' => $contact->getMessage()
+                'message' => $contact->getMessage(),
+                'titreArticle' =>$pin->getTitle()
             ])
             ;
 
